@@ -75,3 +75,81 @@ FROM netflix
 WHERE type = 'Movie'
 ORDER BY cast(SUBSTRING_INDEX(duration," ",1) as UNSIGNED) desc;
 ```
+
+### 5. Find Content Added in the Last 5 Years
+```sql
+SELECT *,STR_TO_DATE(DATE_ADDED,'%M %D %Y') AS DATE_RELEASED, DATE_added
+FROM NETFLIX
+WHERE STR_TO_DATE(DATE_ADDED,'%M %D %Y')>=current_date-interval 5 YEAR;
+```
+
+### 6. Find All Movies/TV Shows by Director 'Rajiv Chilaka'
+```sql
+SELECT distinct title,director
+FROM NETFLIX
+where director like "%Mike Flanagan";
+```
+
+### 7. List All TV Shows with More Than 5 Seasons
+```sql
+Select *, cast(SUBSTRING_INDEX(duration," ",1) as UNSIGNED) as sessions from netflix
+where type = "tv show" and cast(SUBSTRING_INDEX(duration," ",1) as UNSIGNED) > 5;
+```
+
+### 8.Find each year and the average numbers of content release in India on netflix. 
+```sql
+Select extract(Year from str_to_date(DATE_ADDED,'%M %D %Y')), 
+count()/ (Select count() from netflix where country ="India")*100
+from netflix
+where country ="India"
+GROUP BY 1
+```
+
+### 9. List All Movies that are Documentaries
+
+```sql
+SELECT * 
+FROM netflix
+WHERE listed_in LIKE '%Documentaries';
+```
+
+
+### 10. Find All Content Without a Director
+
+```sql
+SELECT * 
+FROM netflix
+WHERE director IS NULL;
+```
+
+### 11. Find How Many Movies Actor 'Salman Khan' Appeared in the Last 10 Years
+
+```sql
+SELECT * 
+FROM netflix
+WHERE casts LIKE '%Salman Khan%'
+  AND release_year > EXTRACT(YEAR FROM CURRENT_DATE) - 10;
+```
+
+### 12. Categorize Content Based on the Presence of 'Kill' and 'Violence' Keywords
+```sql
+
+With count_label As(
+Select title, description,
+CASE WHEN description like "%kill%" or "%violence%" THEN "Bad"
+ELSE "Good"
+END AS Label
+from netflix
+)
+Select count(*),label
+from count_label
+group by Label;
+```
+
+## Findings and Conclusion
+
+- **Content Distribution:** The dataset contains a diverse range of movies and TV shows with varying ratings and genres.
+- **Common Ratings:** Insights into the most common ratings provide an understanding of the content's target audience.
+- **Geographical Insights:** The top countries and the average content releases by India highlight regional content distribution.
+- **Content Categorization:** Categorizing content based on specific keywords helps in understanding the nature of content available on Netflix.
+
