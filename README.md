@@ -83,7 +83,7 @@ FROM NETFLIX
 WHERE STR_TO_DATE(DATE_ADDED,'%M %D %Y')>=current_date-interval 5 YEAR;
 ```
 
-### 6. Find All Movies/TV Shows by Director 'Rajiv Chilaka'
+### 6. Find All Movies/TV Shows by Director 'Mike Flanagan'
 ```sql
 SELECT distinct title,director
 FROM NETFLIX
